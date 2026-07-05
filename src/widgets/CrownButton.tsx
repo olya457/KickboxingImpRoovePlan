@@ -28,6 +28,7 @@ const CrownButton: React.FC<{
       activeOpacity={0.85}
       disabled={disabled || busy}
       onPress={onPress}
+      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
       style={[
         styles.base,
         { backgroundColor: palette.bg },
@@ -51,6 +52,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 18,
+    alignSelf: 'stretch',
   },
   mute: { opacity: 0.45 },
   label: {

@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    alignSelf: 'stretch',
   },
   optionOn: { backgroundColor: HUE.panelSoft, borderColor: HUE.violetSoft },
   optionTxt: { color: HUE.mist, fontSize: scale(16, 15), fontWeight: '600' },

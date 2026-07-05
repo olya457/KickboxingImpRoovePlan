@@ -1,4 +1,4 @@
-package com.kickboxingimprooveplan
+package com.kickboxing.imp.roove.plan
 
 import android.app.Application
 import com.facebook.react.PackageList

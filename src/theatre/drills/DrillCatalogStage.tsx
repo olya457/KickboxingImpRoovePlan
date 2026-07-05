@@ -55,7 +55,9 @@ const DrillCatalogStage: React.FC = () => {
               onPress={() => setStrand(f)}
               style={[styles.pill, on && styles.pillOn]}
             >
-              <Text style={[styles.pillTxt, on && styles.pillTxtOn]}>{f}</Text>
+              <Text numberOfLines={1} style={[styles.pillTxt, on && styles.pillTxtOn]}>
+                {f}
+              </Text>
             </TouchableOpacity>
           );
         })}
@@ -92,19 +94,30 @@ const DrillCatalogStage: React.FC = () => {
 const styles = StyleSheet.create({
   filterRow: {
     paddingHorizontal: SPACE.lg,
+    paddingTop: 6,
     paddingBottom: SPACE.sm,
+    alignItems: 'center',
     gap: 8,
   },
   pill: {
     paddingHorizontal: 16,
-    paddingVertical: 8,
+    height: 46,
     borderRadius: RADIUS.pill,
     backgroundColor: HUE.slate,
     borderWidth: 1,
     borderColor: HUE.outline,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   pillOn: { backgroundColor: HUE.amber, borderColor: HUE.amber },
-  pillTxt: { color: HUE.mist, fontSize: 13, fontWeight: '600' },
+  pillTxt: {
+    color: HUE.mist,
+    fontSize: 13,
+    lineHeight: 20,
+    fontWeight: '600',
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+  },
   pillTxtOn: { color: HUE.abyss, fontWeight: '800' },
   card: {
     backgroundColor: HUE.midnight,

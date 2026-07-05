@@ -1,4 +1,4 @@
-package com.kickboxingimprooveplan
+package com.kickboxing.imp.roove.plan
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
