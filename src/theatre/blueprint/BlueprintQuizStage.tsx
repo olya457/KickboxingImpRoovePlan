@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import StageCanvas, { useDockClearance } from '../../widgets/StageCanvas';
 import CresetTitle from '../../widgets/CresetTitle';
-import CrownButton from '../../widgets/CrownButton';
 import { QUIZ_DECK } from '../../ledger/quizDeck';
 import { HUE, RADIUS, SPACE, scale } from '../../palette/tokens';
 import { usePlanLedger } from '../../vault/PlanLedger';
@@ -47,9 +46,10 @@ const BlueprintQuizStage: React.FC = () => {
       </View>
 
       <ScrollView
+        style={styles.scroll}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{ paddingBottom: clearance, paddingHorizontal: SPACE.lg }}
+        contentContainerStyle={{ paddingBottom: SPACE.lg, paddingHorizontal: SPACE.lg }}
       >
         <Text style={styles.prompt}>{probe.prompt}</Text>
         {probe.options.map(opt => {
@@ -66,14 +66,18 @@ const BlueprintQuizStage: React.FC = () => {
             </TouchableOpacity>
           );
         })}
-
-        <CrownButton
-          label={last ? 'See My Plan' : 'Continue'}
-          onPress={advance}
-          disabled={!chosen}
-          style={styles.cta}
-        />
       </ScrollView>
+
+      <View style={[styles.footer, { paddingBottom: clearance }]}>
+        <TouchableOpacity
+          activeOpacity={0.85}
+          disabled={!chosen}
+          onPress={advance}
+          style={[styles.cta, !chosen && styles.ctaOff]}
+        >
+          <Text style={styles.ctaTxt}>{last ? 'See My Plan' : 'Continue'}</Text>
+        </TouchableOpacity>
+      </View>
     </StageCanvas>
   );
 };
@@ -111,7 +115,23 @@ const styles = StyleSheet.create({
   optionTxt: { color: HUE.mist, fontSize: scale(16, 15), fontWeight: '600' },
   optionTxtOn: { color: HUE.ink, fontWeight: '700' },
   check: { color: HUE.amber, fontSize: 18, fontWeight: '800' },
-  cta: { marginTop: SPACE.sm },
+  scroll: { flex: 1 },
+  footer: {
+    paddingHorizontal: SPACE.lg,
+    paddingTop: SPACE.sm,
+  },
+  cta: {
+    backgroundColor: HUE.amber,
+    borderRadius: RADIUS.md,
+    paddingVertical: 18,
+    paddingHorizontal: 18,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'stretch',
+  },
+  ctaOff: { opacity: 0.45 },
+  ctaTxt: { color: HUE.abyss, fontSize: scale(16, 15), fontWeight: '800' },
 });
 
 export default BlueprintQuizStage;

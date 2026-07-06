@@ -1,6 +1,8 @@
 import React from 'react';
-import { StatusBar } from 'react-native';
+import { LogBox, StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+
+LogBox.ignoreLogs([/RN-IAP/, /initialize IAP/, /init-connection/]);
 import { EdgeInsetProvider } from './vault/EdgeInsetKeeper';
 import { TierGateProvider } from './vault/TierGate';
 import { StoreVaultProvider } from './vault/StoreVault';

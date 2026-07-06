@@ -1,9 +1,9 @@
 import React from 'react';
 import {
   ActivityIndicator,
+  Pressable,
   StyleSheet,
   Text,
-  TouchableOpacity,
   ViewStyle,
 } from 'react-native';
 import { HUE, RADIUS, scale } from '../palette/tokens';
@@ -24,15 +24,15 @@ const CrownButton: React.FC<{
       : { bg: HUE.panelSoft, fg: HUE.mist };
 
   return (
-    <TouchableOpacity
-      activeOpacity={0.85}
+    <Pressable
+      collapsable={false}
       disabled={disabled || busy}
       onPress={onPress}
-      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-      style={[
+      style={({ pressed }) => [
         styles.base,
         { backgroundColor: palette.bg },
         (disabled || busy) && styles.mute,
+        pressed && styles.pressed,
         style,
       ]}
     >
@@ -41,7 +41,7 @@ const CrownButton: React.FC<{
       ) : (
         <Text style={[styles.label, { color: palette.fg }]}>{label}</Text>
       )}
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 
@@ -53,11 +53,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 18,
     alignSelf: 'stretch',
+    width: '100%',
   },
   mute: { opacity: 0.45 },
+  pressed: { opacity: 0.85 },
   label: {
     fontSize: scale(16, 15),
     fontWeight: '700',
+    alignSelf: 'stretch',
+    textAlign: 'center',
   },
 });
 

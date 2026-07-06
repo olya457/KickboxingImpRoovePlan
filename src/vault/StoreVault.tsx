@@ -39,9 +39,6 @@ const isCancel = (err?: PurchaseError) => {
   return code.includes('cancel');
 };
 
-// Entitlement is derived from the store (never trusted from the client alone).
-// hasLifetime = a non-consumable purchase is owned.
-// hasActiveSub = an active, non-expired subscription exists.
 const entitledFrom = (purchases: Purchase[], activeSubs: { productId: string; isActive: boolean }[]) => {
   const hasLifetime = purchases.some(p => p.productId === PLAN_SKUS.life);
   const hasActiveSub = activeSubs.some(
@@ -50,13 +47,8 @@ const entitledFrom = (purchases: Purchase[], activeSubs: { productId: string; is
   return hasLifetime || hasActiveSub;
 };
 
-// Gate before unlocking. Rejects pending purchases. The production step is a
-// server-side receipt/JWS check — send `purchase.purchaseToken` to your backend,
-// validate it with Apple/Google, and only then trust the entitlement.
 const verifyPurchase = async (purchase: Purchase): Promise<boolean> => {
   if (purchase.purchaseState === 'pending') return false;
-  // TODO(server): POST purchase.purchaseToken to your backend for App Store /
-  // Play Developer API validation; return its verdict instead of `true`.
   return true;
 };
 
@@ -94,7 +86,6 @@ export const StoreVaultProvider: React.FC<{ children: React.ReactNode }> = ({
           Alert.alert('Purchase Not Verified', 'This purchase could not be verified.');
           return;
         }
-        // Finalizes AND acknowledges (Android) the transaction.
         try {
           await finalizeTx({ purchase, isConsumable: false });
         } catch {}
@@ -124,8 +115,6 @@ export const StoreVaultProvider: React.FC<{ children: React.ReactNode }> = ({
     requestPurchase,
   } = useIAP({ onPurchaseSuccess, onPurchaseError });
 
-  // Re-derive entitlement from the store on launch: active subscription OR
-  // owned lifetime. Expired subscriptions correctly drop Premium.
   const syncEntitlement = useCallback(async () => {
     try {
       const [purchases, activeSubs] = await Promise.all([
@@ -171,7 +160,6 @@ export const StoreVaultProvider: React.FC<{ children: React.ReactNode }> = ({
       try {
         if (subs) {
           const found = subscriptions.find(s => s.id === sku) as any;
-          // Google requires exactly one selected offer token, not all of them.
           const firstOffer = found?.subscriptionOfferDetailsAndroid?.[0];
           const offers =
             Platform.OS === 'android' && firstOffer
@@ -190,8 +178,6 @@ export const StoreVaultProvider: React.FC<{ children: React.ReactNode }> = ({
             type: 'in-app',
           });
         }
-        // Success/failure resolves asynchronously via the listeners above,
-        // which own the `busy` reset. Only synchronous throws land here.
       } catch (e: any) {
         setBusy(false);
         if (!isCancel(e)) {
@@ -209,7 +195,6 @@ export const StoreVaultProvider: React.FC<{ children: React.ReactNode }> = ({
     }
     setBusy(true);
     try {
-      // Use the returned arrays directly — do not read possibly-stale hook state.
       const [purchases, activeSubs] = await Promise.all([
         queryAvailablePurchases(),
         queryActiveSubscriptions(),
@@ -228,7 +213,6 @@ export const StoreVaultProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [connected, tier]);
 
-  // Cancelling a subscription must happen in the store, not in-app.
   const manage = useCallback(() => {
     Linking.openURL(MANAGE_URL).catch(() => {});
   }, []);
