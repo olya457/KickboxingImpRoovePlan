@@ -42,8 +42,8 @@ const REEL: Slide[] = [
   },
   {
     art: SCENERY.hydrate,
-    title: 'Unlock Full Progress',
-    body: 'Upgrade to Premium for 30-day plans, unlimited calorie tracking, all articles, and full workout access.',
+    title: 'Record Your Progress',
+    body: 'Mark training days in your personal diary and revisit every completed workout whenever you need.',
   },
 ];
 

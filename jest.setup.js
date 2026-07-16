@@ -1,3 +1,4 @@
+/* global jest */
 jest.mock('@react-native-async-storage/async-storage', () => {
   let store = {};
   return {
@@ -21,16 +22,3 @@ jest.mock('react-native-webview', () => {
   const { View } = require('react-native');
   return { WebView: (props) => React.createElement(View, props) };
 });
-
-jest.mock('react-native-iap', () => ({
-  useIAP: () => ({
-    connected: false,
-    products: [],
-    subscriptions: [],
-    fetchProducts: jest.fn(),
-    requestPurchase: jest.fn(),
-  }),
-  finishTransaction: jest.fn(() => Promise.resolve()),
-  getAvailablePurchases: jest.fn(() => Promise.resolve([])),
-  getActiveSubscriptions: jest.fn(() => Promise.resolve([])),
-}));

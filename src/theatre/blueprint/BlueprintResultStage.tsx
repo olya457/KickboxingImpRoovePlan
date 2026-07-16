@@ -1,14 +1,12 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import StageCanvas, { useDockClearance } from '../../widgets/StageCanvas';
 import CresetTitle from '../../widgets/CresetTitle';
 import CrownButton from '../../widgets/CrownButton';
 import { DRILL_ROSTER } from '../../ledger/drillRoster';
 import { HUE, RADIUS, SPACE, scale } from '../../palette/tokens';
 import { usePlanLedger } from '../../vault/PlanLedger';
-import { useTierGate } from '../../vault/TierGate';
-import { useFlow } from '../../navigation/FlowOrchestrator';
-import { DOCK } from '../../navigation/routePaths';
+import { PROGRAM_VAULT } from '../../ledger/programVault';
 
 const loadFor = (name: string) => {
   const drill = DRILL_ROSTER.find(d => d.title === name);
@@ -18,8 +16,6 @@ const loadFor = (name: string) => {
 const BlueprintResultStage: React.FC = () => {
   const clearance = useDockClearance();
   const ledger = usePlanLedger();
-  const { premium } = useTierGate();
-  const { jumpToTab } = useFlow();
   const program = ledger.program!;
 
   const restCount = program.week.filter(d => d.rest).length;
@@ -89,42 +85,37 @@ const BlueprintResultStage: React.FC = () => {
                   key={i}
                   style={[
                     styles.cell,
-                    premium && (rest ? styles.cellRest : styles.cellWork),
+                    rest ? styles.cellRest : styles.cellWork,
                   ]}
                 >
-                  <Text style={[styles.cellTxt, !premium && styles.cellMuted]}>
+                  <Text style={styles.cellTxt}>
                     {i + 1}
                   </Text>
                 </View>
               );
             })}
           </View>
-          {!premium && (
-            <View style={styles.lockVeil}>
-              <Text style={styles.lockGlyph}>🔒</Text>
-              <Text style={styles.lockTitle}>30-Day Plan Locked</Text>
-              <Text style={styles.lockSub}>
-                Upgrade to access your full training calendar
-              </Text>
-              <CrownButton
-                label="Get Premium"
-                onPress={() => jumpToTab(DOCK.tier)}
-                style={styles.lockBtn}
-              />
-            </View>
-          )}
         </View>
 
-        {!premium && (
-          <View style={styles.upsell}>
-            <Text style={styles.upsellTitle}>Unlock the Full 30-Day Plan</Text>
-            <Text style={styles.upsellBody}>
-              Get daily exercises, rest days, and weekly goals for a full month of
-              structured training.
-            </Text>
-            <CrownButton label="Get Premium" onPress={() => jumpToTab(DOCK.tier)} />
-          </View>
-        )}
+        <Text style={styles.plansHead}>ALL TRAINING PLANS</Text>
+        <Text style={styles.plansCaption}>Choose any of 15 open programs.</Text>
+        {Object.values(PROGRAM_VAULT).map(item => {
+          const active = item.id === program.id;
+          return (
+            <TouchableOpacity
+              key={item.id}
+              activeOpacity={0.84}
+              onPress={() => ledger.selectPlan(item.id)}
+              style={[styles.planRow, active && styles.planRowActive]}
+            >
+              <View style={styles.planCopy}>
+                <Text style={styles.planTitle}>{item.title}</Text>
+                <Text style={styles.planFocus}>{item.focus.slice(0, 3).join(' · ')}</Text>
+              </View>
+              <Text style={styles.planAction}>{active ? '✓' : 'View'}</Text>
+            </TouchableOpacity>
+          );
+        })}
 
         <CrownButton
           label="Retake Questionnaire"
@@ -242,6 +233,14 @@ const styles = StyleSheet.create({
   upsellTitle: { color: HUE.ink, fontSize: scale(16, 15), fontWeight: '800' },
   upsellBody: { color: HUE.mist, fontSize: 13, lineHeight: 20, marginVertical: 8 },
   retake: { marginBottom: SPACE.md },
+  plansHead: { color: HUE.ghost, fontSize: 12, fontWeight: '800', letterSpacing: 1 },
+  plansCaption: { color: HUE.mist, fontSize: 13, marginTop: 4, marginBottom: 12 },
+  planRow: { flexDirection: 'row', alignItems: 'center', backgroundColor: HUE.midnight, borderRadius: RADIUS.md, borderWidth: 1, borderColor: HUE.outline, padding: SPACE.md, marginBottom: 10 },
+  planRowActive: { borderColor: HUE.amber, backgroundColor: HUE.panelSoft },
+  planCopy: { flex: 1, paddingRight: 8 },
+  planTitle: { color: HUE.ink, fontSize: scale(15, 14), fontWeight: '800' },
+  planFocus: { color: HUE.mist, fontSize: 11, marginTop: 4 },
+  planAction: { color: HUE.amber, fontSize: 13, fontWeight: '800' },
 });
 
 export default BlueprintResultStage;

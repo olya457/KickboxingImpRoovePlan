@@ -60,9 +60,6 @@
             ReferencedContainer = "container:KickboxingImpRoovePlan.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <StoreKitConfigurationFileReference
-         identifier = "../KickboxingImpRoovePlan/Products.storekit">
-      </StoreKitConfigurationFileReference>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

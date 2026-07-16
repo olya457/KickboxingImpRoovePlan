@@ -3,13 +3,12 @@ import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import StageCanvas, { useDockClearance } from '../../widgets/StageCanvas';
 import CresetTitle from '../../widgets/CresetTitle';
 import CardActions from '../../widgets/CardActions';
-import { READS_LIBRARY, FREE_READ_COUNT } from '../../ledger/readsLibrary';
+import { READS_LIBRARY } from '../../ledger/readsLibrary';
 import { READ_ART } from '../../ledger/assetAtlas';
 import { CANVAS, HUE, RADIUS, SPACE, scale } from '../../palette/tokens';
 import { useKeepsake } from '../../vault/KeepsakeStore';
-import { useTierGate } from '../../vault/TierGate';
 import { useFlow } from '../../navigation/FlowOrchestrator';
-import { FLOW, DOCK } from '../../navigation/routePaths';
+import { FLOW } from '../../navigation/routePaths';
 import { broadcast } from '../../widgets/shareKit';
 
 const ART_SIZE = CANVAS.width - SPACE.lg * 2;
@@ -17,8 +16,7 @@ const ART_SIZE = CANVAS.width - SPACE.lg * 2;
 const ReadsShelfStage: React.FC = () => {
   const clearance = useDockClearance();
   const keepsake = useKeepsake();
-  const { premium } = useTierGate();
-  const { push, jumpToTab } = useFlow();
+  const { push } = useFlow();
 
   return (
     <StageCanvas>
@@ -28,17 +26,11 @@ const ReadsShelfStage: React.FC = () => {
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ paddingBottom: clearance, paddingHorizontal: SPACE.lg }}
       >
-        {READS_LIBRARY.map((read, i) => {
-          const locked = !premium && i >= FREE_READ_COUNT;
+        {READS_LIBRARY.map(read => {
           return (
             <View key={read.id} style={styles.card}>
               <View>
                 <Image source={READ_ART[read.art]} style={styles.art} resizeMode="cover" />
-                {locked && (
-                  <View style={styles.lockTag}>
-                    <Text style={styles.lockTagTxt}>🔒 Premium</Text>
-                  </View>
-                )}
               </View>
               <View style={styles.body}>
                 <Text style={styles.title}>{read.title}</Text>
@@ -47,11 +39,7 @@ const ReadsShelfStage: React.FC = () => {
                   saved={keepsake.isReadSaved(read.id)}
                   onSave={() => keepsake.toggleRead(read.id)}
                   onShare={() => broadcast(read.title, read.blurb)}
-                  onOpen={() =>
-                    locked
-                      ? jumpToTab(DOCK.tier)
-                      : push(FLOW.readDetail, { id: read.id })
-                  }
+                  onOpen={() => push(FLOW.readDetail, { id: read.id })}
                 />
               </View>
             </View>

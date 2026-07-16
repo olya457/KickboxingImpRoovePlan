@@ -12,6 +12,7 @@ interface LedgerApi {
   hasPlan: boolean;
   program: TrainProgram | null;
   savePlan: (answers: QuizAnswers) => TrainProgram;
+  selectPlan: (id: string) => void;
   resetPlan: () => void;
 }
 
@@ -36,6 +37,7 @@ export const PlanLedgerProvider: React.FC<{ children: React.ReactNode }> = ({
         commit({ answers, programId: id });
         return PROGRAM_VAULT[id];
       },
+      selectPlan: id => commit(prev => ({ ...prev, programId: id })),
       resetPlan: () => commit({ answers: {}, programId: null }),
     };
   }, [value, commit]);

@@ -16,7 +16,6 @@ import { CALORIE_GOALS } from '../../ledger/programVault';
 import { HUE, RADIUS, SPACE, scale } from '../../palette/tokens';
 import { useFuelLog, MealSlot } from '../../vault/FuelLog';
 import { usePlanLedger } from '../../vault/PlanLedger';
-import { useTierGate } from '../../vault/TierGate';
 import { useFlow } from '../../navigation/FlowOrchestrator';
 import { DOCK } from '../../navigation/routePaths';
 
@@ -30,7 +29,6 @@ const FuelMeterStage: React.FC = () => {
   const clearance = useDockClearance();
   const fuel = useFuelLog();
   const ledger = usePlanLedger();
-  const { premium } = useTierGate();
   const { jumpToTab } = useFlow();
 
   const effectiveGoal =
@@ -133,19 +131,7 @@ const FuelMeterStage: React.FC = () => {
 
             <View style={styles.histBlock}>
               <Text style={styles.sectionHead}>HISTORY</Text>
-              {!premium ? (
-                <View style={styles.histLock}>
-                  <Text style={styles.histLockTxt}>
-                    🔒 Calorie history is a Premium feature. Free tracking covers today
-                    only.
-                  </Text>
-                  <CrownButton
-                    label="Unlock History"
-                    onPress={() => jumpToTab(DOCK.tier)}
-                    style={styles.noticeBtn}
-                  />
-                </View>
-              ) : fuel.history.length === 0 ? (
+              {fuel.history.length === 0 ? (
                 <Text style={styles.histEmpty}>
                   Your finished days will appear here.
                 </Text>

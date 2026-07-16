@@ -9,7 +9,7 @@ import BlueprintQuizStage from '../theatre/blueprint/BlueprintQuizStage';
 import FuelMeterStage from '../theatre/fuelmeter/FuelMeterStage';
 import ReadsShelfStage from '../theatre/reads/ReadsShelfStage';
 import SavedVaultStage from '../theatre/saved/SavedVaultStage';
-import UnlockTierStage from '../theatre/unlock/UnlockTierStage';
+import TrainingDiaryStage from '../theatre/diary/TrainingDiaryStage';
 
 const ShellDeck: React.FC = () => {
   const { tab } = useFlow();
@@ -22,7 +22,7 @@ const ShellDeck: React.FC = () => {
         {tab === DOCK.fuel && <FuelMeterStage />}
         {tab === DOCK.shelf && <ReadsShelfStage />}
         {tab === DOCK.vault && <SavedVaultStage />}
-        {tab === DOCK.tier && <UnlockTierStage />}
+        {tab === DOCK.diary && <TrainingDiaryStage />}
       </View>
       <HarborTabDock />
     </View>

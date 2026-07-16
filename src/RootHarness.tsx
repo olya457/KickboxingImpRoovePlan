@@ -1,12 +1,10 @@
 import React from 'react';
-import { LogBox, StatusBar } from 'react-native';
+import { StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-LogBox.ignoreLogs([/RN-IAP/, /initialize IAP/, /init-connection/]);
 import { EdgeInsetProvider } from './vault/EdgeInsetKeeper';
-import { TierGateProvider } from './vault/TierGate';
-import { StoreVaultProvider } from './vault/StoreVault';
 import { PlanLedgerProvider } from './vault/PlanLedger';
+import { TrainingDiaryProvider } from './vault/TrainingDiary';
 import { KeepsakeProvider } from './vault/KeepsakeStore';
 import { FuelLogProvider } from './vault/FuelLog';
 import { FlowOrchestrator } from './navigation/FlowOrchestrator';
@@ -16,9 +14,8 @@ const RootHarness: React.FC = () => (
   <SafeAreaProvider>
     <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
     <EdgeInsetProvider>
-      <TierGateProvider>
-        <StoreVaultProvider>
-          <PlanLedgerProvider>
+      <PlanLedgerProvider>
+        <TrainingDiaryProvider>
             <KeepsakeProvider>
               <FuelLogProvider>
                 <FlowOrchestrator>
@@ -26,9 +23,8 @@ const RootHarness: React.FC = () => (
                 </FlowOrchestrator>
               </FuelLogProvider>
             </KeepsakeProvider>
-          </PlanLedgerProvider>
-        </StoreVaultProvider>
-      </TierGateProvider>
+        </TrainingDiaryProvider>
+      </PlanLedgerProvider>
     </EdgeInsetProvider>
   </SafeAreaProvider>
 );

@@ -15,7 +15,7 @@ export const DOCK = {
   fuel: 'fuel',
   shelf: 'shelf',
   vault: 'vault',
-  tier: 'tier',
+  diary: 'diary',
 } as const;
 
 export type DockKey = (typeof DOCK)[keyof typeof DOCK];
@@ -32,5 +32,5 @@ export const DOCK_ITEMS: DockDef[] = [
   { key: DOCK.fuel, glyph: '🔥', label: 'Fuel' },
   { key: DOCK.shelf, glyph: '📖', label: 'Reads' },
   { key: DOCK.vault, glyph: '💛', label: 'Saved' },
-  { key: DOCK.tier, glyph: '👑', label: 'Premium' },
+  { key: DOCK.diary, glyph: '📅', label: 'Diary' },
 ];
